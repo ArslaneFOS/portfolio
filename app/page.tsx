@@ -47,10 +47,6 @@ export default function Home() {
           />
         </div>
 
-        <div className="h-lvh w-full z-50 flex items-center justify-center flex-col gap-6">
-          
-        </div>
-
         {/* <SplitText
           text={<h6 className="">Hi, I'm Arslane. I build things for the web.</h6>}
           className="text-lg font-semibold text-center"
