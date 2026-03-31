@@ -33,9 +33,9 @@ export default function Home() {
             textAlign="center"
           />
           <SplitText
-            text="Currently, I'm focused on building accessible, inclusive products and digital experiences at Upstatement."
+            text="Currently, I'm focused on building accessible, inclusive products and digital experiences."
             className="text-md px-8 sm:px-0 sm:text-lg font-medium text-center text-white opacity-75 font-body"
-            delay={50}
+            delay={25}
             duration={1.25}
             ease="power3.out"
             splitType="chars"
