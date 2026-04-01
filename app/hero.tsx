@@ -5,7 +5,7 @@ import TextType from '@/components/TextType';
 export default function Hero() {
     return (
         <section id="main" className="relative h-lvh w-full flex items-center justify-center flex-col gap-6">
-            <div className="h-[110dvh] w-[95dvw] top-24 self-center absolute rounded-4xl overflow-hidden">
+            <div className="h-[90dvh] sm:h-dvh w-[95dvw] top-24 self-center absolute rounded-4xl overflow-hidden">
                 <Beams
                     beamWidth={3}
                     beamHeight={25}
