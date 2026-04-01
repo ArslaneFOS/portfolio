@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Doto, Raleway } from "next/font/google";
 import "./globals.css";
 import DotGrid from "@/components/DotGrid";
+import GradualBlur from "@/components/GradualBlur";
 
 
 const doto = Doto({
@@ -30,18 +31,6 @@ export default function RootLayout({
       className={`${doto.variable} ${raleway.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col dark:bg-black scroll-smooth">
-        <div style={{ width: '100%', height: '100lvh', position: 'fixed' }}>
-          <DotGrid
-            dotSize={2}
-            gap={15}
-            baseColor="#FFFFFF10"
-            activeColor="#FFFFFF"
-            proximity={120}
-            shockRadius={250}
-            shockStrength={5}
-            resistance={750}
-            returnDuration={1.5} style={undefined} />
-        </div>
         {children}
       </body>
     </html>
