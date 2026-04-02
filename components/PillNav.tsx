@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from 'react';
+import React, { act, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { gsap } from 'gsap';
 import './PillNav.css';
@@ -247,10 +247,10 @@ const PillNav: React.FC<PillNavProps> = ({
   return (
     <div className="pill-nav-container">
       <nav className={`pill-nav ${className}`} aria-label="Primary" style={cssVars}>
-        {isRouterLink(items?.[0]?.href) ? (
+        {isRouterLink(activeHref) ? (
           <Link
             className="pill-logo"
-            href={items[0].href}
+            href={activeHref || '#'}
             aria-label="Home"
             onMouseEnter={handleLogoEnter}
             role="menuitem"
@@ -263,7 +263,7 @@ const PillNav: React.FC<PillNavProps> = ({
         ) : (
           <a
             className="pill-logo"
-            href={items?.[0]?.href || '#'}
+            href={activeHref || '#'}
             aria-label="Home"
             onMouseEnter={handleLogoEnter}
             ref={el => {

@@ -8,13 +8,13 @@ import DotGrid from "@/components/DotGrid";
 export default function Home() {
   return (
     <div className="flex flex-col flex-1 items-center justify-center font-sans ">
-      <main className={`flex flex-1 w-full flex-col items-center justify-between bg-[#050505] sm:items-start`}>
+      <main className={`flex flex-1 w-full flex-col items-center justify-between bg-[#111111] sm:items-start`}>
         <div style={{ width: '100%', height: '100lvh', position: 'fixed' }}>
           <DotGrid
             dotSize={2}
-            gap={10}
-            baseColor="#FFFFFF30"
-            activeColor="#FFFFFF"
+            gap={15}
+            baseColor="#555555"
+            activeColor="#2b7fff" 
             proximity={120}
             shockRadius={250}
             shockStrength={5}

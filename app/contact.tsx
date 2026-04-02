@@ -46,7 +46,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="w-full min-h-screen flex flex-col items-center justify-center px-4 py-20 bg-[#050505]">
+    <section id="contact" className="w-full min-h-screen flex flex-col items-center justify-center px-4 py-20">
       <div className="max-w-2xl w-full">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Get in Touch</h2>
