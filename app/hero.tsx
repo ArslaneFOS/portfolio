@@ -53,7 +53,7 @@ export default function Hero({ lang }: HeroProps) {
                 cursorBlinkDuration={0.5}
             />
             <div className="mt-8 z-50">
-                <a href="#contact" className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                <a href="#contact" className="inline-block px-6 py-3 bg-white text-black rounded-lg font-medium hover:bg-gray-200 transition-colors">
                     {translations.hero.contactCta}
                 </a>
             </div>
