@@ -2,8 +2,17 @@
 
 import { useState } from 'react';
 import AnimatedContent from '@/components/AnimatedContent';
+import { getTranslations, type Locale } from '@/lib/i18n';
 
-const Contact = () => {
+type ContactProps = {
+  lang: Locale;
+};
+
+const Contact = ({ lang }: ContactProps) => {
+  const translations = getTranslations(lang);
+  const emailAddress = '';
+  const location = 'Paris, France';
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -28,9 +37,17 @@ const Contact = () => {
     setSubmitStatus('idle');
 
     try {
-      // Replace with your actual form submission logic
-      // Example: await fetch('/api/contact', { method: 'POST', body: JSON.stringify(formData) })
-      console.log('Form data:', formData);
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit contact form');
+      }
       
       setSubmitStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
@@ -49,23 +66,21 @@ const Contact = () => {
     <section id="contact" className="w-full min-h-screen flex flex-col items-center justify-center px-4 py-20">
       <div className="max-w-2xl w-full">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Get in Touch</h2>
-          <p className="text-gray-400 text-lg">
-            Have a project in mind or just want to chat? Feel free to reach out!
-          </p>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">{translations.contact.heading}</h2>
+          <p className="text-gray-400 text-lg">{translations.contact.subheading}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Contact Form */}
           <AnimatedContent direction="vertical" distance={50} duration={0.5}>
             <div className="bg-linear-to-br from-[#1a1a1a] to-[#0f0f0f] border border-gray-800 rounded-lg p-8">
-              <h3 className="text-xl font-semibold text-white mb-6">Send me a message</h3>
+              <h3 className="text-xl font-semibold text-white mb-6">{translations.contact.formTitle}</h3>
               
               <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Name */}
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-                    Name
+                    {translations.contact.fields.name.label}
                   </label>
                   <input
                     type="text"
@@ -75,14 +90,14 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
-                    placeholder="Your name"
+                    placeholder={translations.contact.fields.name.placeholder}
                   />
                 </div>
 
                 {/* Email */}
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                    Email
+                    {translations.contact.fields.email.label}
                   </label>
                   <input
                     type="email"
@@ -92,14 +107,14 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
-                    placeholder="your.email@example.com"
+                    placeholder={translations.contact.fields.email.placeholder}
                   />
                 </div>
 
                 {/* Subject */}
                 <div>
                   <label htmlFor="subject" className="block text-sm font-medium text-gray-300 mb-2">
-                    Subject
+                    {translations.contact.fields.subject.label}
                   </label>
                   <input
                     type="text"
@@ -109,14 +124,14 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
-                    placeholder="What is this about?"
+                    placeholder={translations.contact.fields.subject.placeholder}
                   />
                 </div>
 
                 {/* Message */}
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
-                    Message
+                    {translations.contact.fields.message.label}
                   </label>
                   <textarea
                     id="message"
@@ -126,7 +141,7 @@ const Contact = () => {
                     required
                     rows={5}
                     className="w-full px-4 py-2 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors resize-none"
-                    placeholder="Your message..."
+                    placeholder={translations.contact.fields.message.placeholder}
                   />
                 </div>
 
@@ -136,18 +151,18 @@ const Contact = () => {
                   disabled={isSubmitting}
                   className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white font-medium rounded-lg transition-colors duration-200"
                 >
-                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                  {isSubmitting ? translations.contact.sendingButton : translations.contact.submitButton}
                 </button>
 
                 {/* Status Messages */}
                 {submitStatus === 'success' && (
                   <p className="text-green-400 text-sm text-center">
-                    ✓ Message sent successfully!
+                    ✓ {translations.contact.successMessage}
                   </p>
                 )}
                 {submitStatus === 'error' && (
                   <p className="text-red-400 text-sm text-center">
-                    ✗ Error sending message. Please try again.
+                    ✗ {translations.contact.errorMessage}
                   </p>
                 )}
               </form>
@@ -159,47 +174,40 @@ const Contact = () => {
             <div className="space-y-6">
               {/* Contact Information */}
               <div className="bg-linear-to-br from-[#1a1a1a] to-[#0f0f0f] border border-gray-800 rounded-lg p-8">
-                <h3 className="text-xl font-semibold text-white mb-6">Contact Info</h3>
+                <h3 className="text-xl font-semibold text-white mb-6">{translations.contact.infoTitle}</h3>
                 
                 <div className="space-y-4">
-                  <div>
-                    <p className="text-sm text-gray-500 mb-1">Email</p>
+                  {/* <div>
+                    <p className="text-sm text-gray-500 mb-1">{translations.contact.emailLabel}</p>
                     <a
-                      href="mailto:your.email@example.com"
+                      href={`mailto:${emailAddress}`}
                       className="text-white hover:text-blue-400 transition-colors"
                     >
-                      your.email@example.com
+                      {emailAddress}
                     </a>
+                  </div> */}
+
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">{translations.contact.locationLabel}</p>
+                    <p className="text-white">{location}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Location</p>
-                    <p className="text-white">City, Country</p>
-                  </div>
-
-                  <div>
-                    <p className="text-sm text-gray-500 mb-2">Social Links</p>
+                    <p className="text-sm text-gray-500 mb-2">{translations.contact.socialLinksLabel}</p>
                     <div className="flex gap-3">
                       <a
-                        href="#"
+                        href="https://github.com/ArslaneFOS"
                         className="text-gray-400 hover:text-white transition-colors"
                         aria-label="GitHub"
                       >
                         GitHub
                       </a>
                       <a
-                        href="#"
+                        href="https://www.linkedin.com/in/arslane-fosso/"
                         className="text-gray-400 hover:text-white transition-colors"
                         aria-label="LinkedIn"
                       >
                         LinkedIn
-                      </a>
-                      <a
-                        href="#"
-                        className="text-gray-400 hover:text-white transition-colors"
-                        aria-label="Twitter"
-                      >
-                        Twitter
                       </a>
                     </div>
                   </div>
@@ -207,18 +215,16 @@ const Contact = () => {
               </div>
 
               {/* Calendly Button */}
-              <div className="bg-linear-to-br from-blue-600 to-blue-700 rounded-lg p-8 text-center">
-                <h3 className="text-lg font-semibold text-white mb-2">Schedule a Call</h3>
-                <p className="text-blue-100 text-sm mb-6">
-                  Let's discuss your project in detail
-                </p>
+              <div className="bg-linear-to-br from-[#056bfd] to-[#0056c9] rounded-lg p-8 text-center">
+                <h3 className="text-lg font-semibold text-white mb-2">{translations.contact.scheduleTitle}</h3>
+                <p className="text-blue-100 text-sm mb-6">{translations.contact.scheduleDescription}</p>
                 <a
                   href="https://calendly.com/your-username"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block px-6 py-2 bg-white text-blue-600 font-medium rounded-lg hover:bg-gray-100 transition-colors"
+                  className="inline-block px-6 py-2 bg-white text-[#056bfd] font-medium rounded-lg hover:bg-gray-100 transition-colors"
                 >
-                  Book a Meeting
+                  {translations.contact.scheduleCta}
                 </a>
               </div>
             </div>

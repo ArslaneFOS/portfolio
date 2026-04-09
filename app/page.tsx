@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Hero from "./hero";
 import GradualBlur from "@/components/GradualBlur";
 import HomeNav from "./home-nav";
@@ -5,7 +6,27 @@ import Skills from "./skills";
 import Projects from "./projects";
 import Contact from "./contact";
 import DotGrid from "@/components/DotGrid";
-export default function Home() {
+import { getLocale, getTranslations } from "@/lib/i18n";
+
+type HomePageProps = {
+  searchParams: Promise<{ lang?: string | string[] }>;
+};
+
+export async function generateMetadata({ searchParams }: HomePageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const locale = getLocale(params.lang);
+  const translations = getTranslations(locale);
+
+  return {
+    title: translations.metadata.title,
+    description: translations.metadata.description,
+  };
+}
+
+export default async function Home({ searchParams }: HomePageProps) {
+  const params = await searchParams;
+  const lang = getLocale(params.lang);
+
   return (
     <div className="flex flex-col flex-1 items-center justify-center font-sans ">
       <main className={`flex flex-1 w-full flex-col items-center justify-between bg-[#111111] sm:items-start`}>
@@ -23,11 +44,11 @@ export default function Home() {
             style={undefined}
           />
         </div>
-        <HomeNav />
-        <Hero />
-        <Skills />
-        <Projects />
-        <Contact />
+        <HomeNav lang={lang} />
+        <Hero lang={lang} />
+        <Skills lang={lang} />
+        <Projects lang={lang} />
+        <Contact lang={lang} />
 
         <GradualBlur
           target="page"

@@ -29,7 +29,7 @@ const ProjectCard = ({ project, idx }: ProjectCardProps) => {
         >
             <SpotlightCard 
                 className='p-0! rounded-lg! overflow-hidden! border-0! shadow-lg!'>
-                <a href={project.link} className="block cursor-pointer">
+                <a href={project.link} className="block cursor-pointer" target="_blank" rel="noopener noreferrer">
                     <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg overflow-hidden hover:border-gray-700 transition-all">
                         <div className="w-full h-48 bg-gray-700 overflow-hidden">
                             <img

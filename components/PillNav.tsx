@@ -1,6 +1,7 @@
 "use client";
-import React, { act, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { gsap } from 'gsap';
 import './PillNav.css';
 
@@ -10,11 +11,23 @@ export type PillNavItem = {
   ariaLabel?: string;
 };
 
+export type PillLocaleItem = {
+  code: string;
+  label: string;
+  ariaLabel?: string;
+};
+
 export interface PillNavProps {
   logo: string;
   logoAlt?: string;
   items: PillNavItem[];
+  localeItems?: PillLocaleItem[];
+  currentLocale?: string;
   activeHref?: string;
+  navAriaLabel?: string;
+  homeAriaLabel?: string;
+  toggleMenuAriaLabel?: string;
+  languageMenuAriaLabel?: string;
   className?: string;
   ease?: string;
   baseColor?: string;
@@ -29,7 +42,13 @@ const PillNav: React.FC<PillNavProps> = ({
   logo,
   logoAlt = 'Logo',
   items,
+  localeItems,
+  currentLocale,
   activeHref,
+  navAriaLabel = 'Primary',
+  homeAriaLabel = 'Home',
+  toggleMenuAriaLabel = 'Toggle menu',
+  languageMenuAriaLabel = 'Change language',
   className = '',
   ease = 'power3.easeOut',
   baseColor = '#fff',
@@ -49,7 +68,10 @@ const PillNav: React.FC<PillNavProps> = ({
   const hamburgerRef = useRef<HTMLButtonElement | null>(null);
   const mobileMenuRef = useRef<HTMLDivElement | null>(null);
   const navItemsRef = useRef<HTMLDivElement | null>(null);
+  const localeMenuRef = useRef<HTMLDivElement | null>(null);
   const logoRef = useRef<HTMLAnchorElement | HTMLElement | null>(null);
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const layout = () => {
@@ -118,6 +140,7 @@ const PillNav: React.FC<PillNavProps> = ({
     if (initialLoadAnimation) {
       const logo = logoRef.current;
       const navItems = navItemsRef.current;
+      const localeMenu = localeMenuRef.current;
 
       if (logo) {
         gsap.set(logo, { scale: 0 });
@@ -132,6 +155,16 @@ const PillNav: React.FC<PillNavProps> = ({
         gsap.set(navItems, { width: 0, overflow: 'hidden' });
         gsap.to(navItems, {
           width: 'auto',
+          duration: 0.6,
+          ease
+        });
+      }
+
+      if (localeMenu) {
+        gsap.set(localeMenu, { opacity: 0, y: -8 });
+        gsap.to(localeMenu, {
+          opacity: 1,
+          y: 0,
           duration: 0.6,
           ease
         });
@@ -174,6 +207,12 @@ const PillNav: React.FC<PillNavProps> = ({
       ease,
       overwrite: 'auto'
     });
+  };
+
+  const handleLocaleChange = (code: string) => {
+    const hash = window.location.hash || '';
+    const search = code ? `?lang=${encodeURIComponent(code)}` : '';
+    router.replace(`${pathname}${search}${hash}`, { scroll: false });
   };
 
   const toggleMobileMenu = () => {
@@ -246,12 +285,12 @@ const PillNav: React.FC<PillNavProps> = ({
 
   return (
     <div className="pill-nav-container">
-      <nav className={`pill-nav ${className}`} aria-label="Primary" style={cssVars}>
+      <nav className={`pill-nav ${className}`} aria-label={navAriaLabel} style={cssVars}>
         {isRouterLink(activeHref) ? (
           <Link
             className="pill-logo"
             href={activeHref || '#'}
-            aria-label="Home"
+            aria-label={homeAriaLabel}
             onMouseEnter={handleLogoEnter}
             role="menuitem"
             ref={el => {
@@ -264,7 +303,7 @@ const PillNav: React.FC<PillNavProps> = ({
           <a
             className="pill-logo"
             href={activeHref || '#'}
-            aria-label="Home"
+            aria-label={homeAriaLabel}
             onMouseEnter={handleLogoEnter}
             ref={el => {
               logoRef.current = el;
@@ -330,10 +369,39 @@ const PillNav: React.FC<PillNavProps> = ({
           </ul>
         </div>
 
+        {localeItems?.length ? (
+          <div
+            ref={localeMenuRef}
+            className="hidden md:flex items-center gap-1 mr-3"
+            role="group"
+            aria-label={languageMenuAriaLabel}
+          >
+            {localeItems.map(item => {
+              const isActive = item.code === currentLocale;
+              return (
+                <button
+                  key={item.code}
+                  type="button"
+                  onClick={() => handleLocaleChange(item.code)}
+                  aria-label={item.ariaLabel || item.label}
+                  aria-pressed={isActive}
+                  className={`min-w-10 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] transition-colors ${
+                    isActive
+                      ? 'border-black bg-black text-white'
+                      : 'border-black/15 bg-white text-black hover:bg-black hover:text-white'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
+          </div>
+        ) : null}
+
         <button
           className="mobile-menu-button mobile-only"
           onClick={toggleMobileMenu}
-          aria-label="Toggle menu"
+          aria-label={toggleMenuAriaLabel}
           ref={hamburgerRef}
         >
           <span className="hamburger-line" />
@@ -343,6 +411,31 @@ const PillNav: React.FC<PillNavProps> = ({
 
       <div className="mobile-menu-popover mobile-only" ref={mobileMenuRef} style={cssVars}>
         <ul className="mobile-menu-list">
+          {localeItems?.length ? (
+            <li className="px-4 pb-3">
+              <div className="flex items-center gap-2" role="group" aria-label={languageMenuAriaLabel}>
+                {localeItems.map(item => {
+                  const isActive = item.code === currentLocale;
+                  return (
+                    <button
+                      key={item.code}
+                      type="button"
+                      onClick={() => handleLocaleChange(item.code)}
+                      aria-label={item.ariaLabel || item.label}
+                      aria-pressed={isActive}
+                      className={`min-w-10 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] transition-colors ${
+                        isActive
+                          ? 'border-black bg-black text-white'
+                          : 'border-black/15 bg-white text-black hover:bg-black hover:text-white'
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </li>
+          ) : null}
           {items.map(item => (
             <li key={item.href}>
               {isRouterLink(item.href) ? (
