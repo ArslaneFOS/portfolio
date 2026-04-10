@@ -219,7 +219,7 @@ const Contact = ({ lang }: ContactProps) => {
                 <h3 className="text-lg font-semibold text-white mb-2">{translations.contact.scheduleTitle}</h3>
                 <p className="text-blue-100 text-sm mb-6">{translations.contact.scheduleDescription}</p>
                 <a
-                  href="https://calendly.com/your-username"
+                  href="https://calendly.com/arslane-ouldslimane-proton/meeting"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block px-6 py-2 bg-white text-[#056bfd] font-medium rounded-lg hover:bg-gray-100 transition-colors"
