@@ -144,6 +144,7 @@ export async function POST(request: NextRequest) {
       });
       if (!response.ok) {
         console.error('Webhook responded with non-OK status:', response.status);
+        console.error('Response body:', await response.text());
         return NextResponse.json(
           {
             ok: false,
@@ -154,6 +155,13 @@ export async function POST(request: NextRequest) {
       }
     } catch (error) {
       console.error('Failed to send webhook:', error);
+      return NextResponse.json(
+        {
+          ok: false,
+          error: 'Failed to send webhook'
+        },
+        { status: 500 }
+      );
     }
   }
   
