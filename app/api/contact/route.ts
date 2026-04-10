@@ -1,3 +1,4 @@
+import { re } from 'mathjs';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -131,7 +132,7 @@ export async function POST(request: NextRequest) {
   // http://workflows.arslane-fos.work/webhook-test/freelance/contact-form
   if (process.env.CONTACT_FORM_WEBHOOK_URL) {
     try {
-      await fetch(process.env.CONTACT_FORM_WEBHOOK_URL, {
+      const response = await fetch(process.env.CONTACT_FORM_WEBHOOK_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -141,6 +142,16 @@ export async function POST(request: NextRequest) {
           data: payload
         })
       });
+      if (!response.ok) {
+        console.error('Webhook responded with non-OK status:', response.status);
+        return NextResponse.json(
+          {
+            ok: false,
+            error: 'Failed to send webhook'
+          },
+          { status: 500 }
+        );
+      }
     } catch (error) {
       console.error('Failed to send webhook:', error);
     }
