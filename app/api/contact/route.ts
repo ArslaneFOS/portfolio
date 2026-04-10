@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
       });
       if (!response.ok) {
         console.error('Webhook responded with non-OK status:', response.status);
-        console.error('Response body:', await response.text());
+        console.error('Response :', response);
         return NextResponse.json(
           {
             ok: false,
